@@ -58,6 +58,7 @@ endif
 
 let g:komau_bold = get(g:, 'komau_bold', 1)
 let g:komau_italic = get(g:, 'komau_italic', 1)
+let g:komau_transparent = get(g:, 'komau_transparent', 0)
 let s:bold = "bold"
 let s:italic = "italic"
 
@@ -81,7 +82,11 @@ function! s:h(group, style)
     \ "cterm="   (has_key(a:style, "cterm") ? a:style.cterm    : "NONE")
 endfunction
 
-call s:h("Normal",        {"bg": s:bg, "fg": s:norm})
+if g:komau_transparent
+  call s:h("Normal",        {"fg": s:norm})
+else
+  call s:h("Normal",        {"bg": s:bg, "fg": s:norm})
+endif
 
 " restore &background's value in case changing Normal changed &background (:help :hi-normal-cterm)
 if &background != s:background
@@ -143,9 +148,15 @@ hi! link ModeMsg MoreMsg
 call s:h("LineNr",        {"fg": s:bg_subtle})
 call s:h("CursorLineNr",  {"fg": s:cursorlinenr, "bg": s:bg_very_subtle, "cterm": s:bold, "gui": s:bold})
 call s:h("Question",      {"fg": s:red})
-call s:h("StatusLine",    {"bg": s:bg_very_subtle})
-call s:h("StatusLineNC",  {"bg": s:bg_very_subtle, "fg": s:medium_gray})
-call s:h("VertSplit",     {"bg": s:bg_very_subtle, "fg": s:bg_very_subtle})
+if g:komau_transparent
+  call s:h("StatusLine",    {"fg": s:norm})
+  call s:h("StatusLineNC",  {"fg": s:medium_gray})
+  call s:h("VertSplit",     {"fg": s:bg_very_subtle})
+else
+  call s:h("StatusLine",    {"bg": s:bg_very_subtle})
+  call s:h("StatusLineNC",  {"bg": s:bg_very_subtle, "fg": s:medium_gray})
+  call s:h("VertSplit",     {"bg": s:bg_very_subtle, "fg": s:bg_very_subtle})
+endif
 call s:h("Title",         {"fg": s:light_gray})
 call s:h("Visual",        {"fg": s:norm, "bg": s:bg_very_subtle})
 call s:h("VisualNOS",     {"bg": s:bg_subtle})
@@ -157,7 +168,11 @@ call s:h("DiffAdd",       {"fg": s:green})
 call s:h("DiffDelete",    {"fg": s:red})
 call s:h("DiffChange",    {"fg": s:yellow})
 call s:h("DiffText",      {"fg": s:blue})
-call s:h("SignColumn",    {"fg": s:green})
+if g:komau_transparent
+  call s:h("SignColumn",    {"fg": s:green})
+else
+  call s:h("SignColumn",    {"fg": s:green})
+endif
 
 
 if has("gui_running")
@@ -172,15 +187,27 @@ else
   call s:h("SpellLocal",  {"cterm": "underline", "fg": s:green})
 endif
 
-call s:h("Pmenu",         {"fg": s:norm, "bg": s:bg_very_subtle})
-call s:h("PmenuSel",      {"fg": s:subtle_black, "bg": s:pink})
-call s:h("PmenuSbar",     {"fg": s:norm, "bg": s:bg_subtle})
-call s:h("PmenuThumb",    {"fg": s:norm, "bg": s:bg_subtle})
-call s:h("TabLine",       {"fg": s:norm, "bg": s:bg_very_subtle})
-call s:h("TabLineSel",    {"fg": s:subtle_black, "bg": s:pink, "gui": s:bold, "cterm": s:bold})
-call s:h("TabLineFill",   {"fg": s:norm, "bg": s:bg_very_subtle})
-call s:h("CursorColumn",  {"bg": s:bg_very_subtle})
-call s:h("CursorLine",    {"bg": s:bg_very_subtle})
+if g:komau_transparent
+  call s:h("Pmenu",         {"fg": s:norm})
+  call s:h("PmenuSel",      {"fg": s:subtle_black, "bg": s:pink})
+  call s:h("PmenuSbar",     {"fg": s:norm})
+  call s:h("PmenuThumb",    {"fg": s:norm})
+  call s:h("TabLine",       {"fg": s:norm})
+  call s:h("TabLineSel",    {"fg": s:subtle_black, "bg": s:pink, "gui": s:bold, "cterm": s:bold})
+  call s:h("TabLineFill",   {"fg": s:norm})
+  call s:h("CursorColumn",  {})
+  call s:h("CursorLine",    {})
+else
+  call s:h("Pmenu",         {"fg": s:norm, "bg": s:bg_very_subtle})
+  call s:h("PmenuSel",      {"fg": s:subtle_black, "bg": s:pink})
+  call s:h("PmenuSbar",     {"fg": s:norm, "bg": s:bg_subtle})
+  call s:h("PmenuThumb",    {"fg": s:norm, "bg": s:bg_subtle})
+  call s:h("TabLine",       {"fg": s:norm, "bg": s:bg_very_subtle})
+  call s:h("TabLineSel",    {"fg": s:subtle_black, "bg": s:pink, "gui": s:bold, "cterm": s:bold})
+  call s:h("TabLineFill",   {"fg": s:norm, "bg": s:bg_very_subtle})
+  call s:h("CursorColumn",  {"bg": s:bg_very_subtle})
+  call s:h("CursorLine",    {"bg": s:bg_very_subtle})
+endif
 call s:h("ColorColumn",   {"bg": s:bg_subtle})
 
 call s:h("MatchParen",    {"bg": s:bg_subtle, "fg": s:norm})
